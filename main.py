@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5 import uic
+from PyQt5.QtCore import Qt
 
 import celebrity_ai_api
 import face_ai_api
@@ -39,16 +40,43 @@ class WindowClass(QMainWindow, form_class) :
         self.celebrity_accuracy2_value.setText("")
         self.celebrity_name3_value.setText("")
         self.celebrity_accuracy3_value.setText("")
-    
+
+        self.photoView.setText(" ")
+
     # '얼굴조사하기' 버튼을 누르면 작동
+
     def search(self) :
         face_data = face_ai_api.face_data
         celebrity_data = celebrity_ai_api.celebrity_data
-
+        
         qPixmapVar = QPixmap()
         qPixmapVar.load('슴성_거니.png')
         qPixmapVar = qPixmapVar.scaled(400,500)
+
+        x, y, w, h = face_data['faces'][0]['roi'].values()
+        width, height = face_data['info']['size'].values()
+        width_ratio = width / 400
+        height_ratio = height / 500
+
+        x = x / width_ratio
+        y = y / height_ratio
+        w = w / width_ratio
+        h = h / height_ratio
+
+        qPixpaint = QPainter(qPixmapVar)
+        qPixpaint.begin(self)
+        qPixpaint.setPen(QPen(Qt.red, 3))
+        qPixpaint.drawRect(x,y,w,h)
+        qPixpaint.end()
+
+        #비율 구하는 법
+        # 기존비율 가로1:세로1  , 변경된 비율 가로2:세로2 인 경우
+        # 가로1 / 가로2 = A , 세로1/A = 세로2가 나옴
+        # 기존idx 가좌1 / A = 변좌1
+        # 기존idx 세좌1 / A = 세좌1
+
         self.photoView.setPixmap(qPixmapVar)
+        self.photoView.show()
         
         print(face_data)
         print(celebrity_data)
