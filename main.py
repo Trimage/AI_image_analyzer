@@ -50,8 +50,8 @@ class WindowClass(QMainWindow, form_class) :
     # '얼굴조사하기' 버튼을 누르면 작동
 
     def search(self) :
-        face_data = face_ai_api.face_data
-        celebrity_data = celebrity_ai_api.celebrity_data
+        face_data = face_ai_api.request_data()
+        celebrity_data = celebrity_ai_api.request_data()
         
         qPixmapVar = QPixmap()
         qPixmapVar.load('슴성_거니.png')
