@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QCoreApplication
 
 import celebrity_ai_api
 import face_ai_api
@@ -10,10 +10,33 @@ import face_ai_api
 
 #UI파일 연결
 #단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
-form_class = uic.loadUiType("main_ui.ui")[0]
+main_form_class = uic.loadUiType("main_ui.ui")[0]
+
+
+class WindowhelpClass(QDialog) :
+    def __init__(self, WindowClass) :
+        super(WindowhelpClass,self).__init__(WindowClass)
+        help_ui = "help_ui.ui"
+        uic.loadUi(help_ui,self)
+        self.show()
+        self.setWindowIcon(QIcon('icon.png'))
+        self.setWindowTitle('도움말')
+
+        qPixmapicon = QPixmap()
+        qPixmapicon.load('icon.png')
+        qPixmapicon = qPixmapicon.scaled(100,100)
+        
+        self.icon_lable.setPixmap(qPixmapicon)
+        self.icon_lable.show()
+
+        self.exit_btn.clicked.connect(self.push_exit)
+
+    def push_exit(self) :
+        self.close()
+
 
 #화면을 띄우는데 사용되는 Class 선언
-class WindowClass(QMainWindow, form_class) :
+class WindowClass(QMainWindow, main_form_class) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
@@ -23,8 +46,14 @@ class WindowClass(QMainWindow, form_class) :
         #버튼에 기능을 연결하는 코드
         self.search_btn.clicked.connect(self.search)
         self.init_btn.clicked.connect(self.init)
+        self.help_btn.clicked.connect(self.help)
+        self.exit_btn.clicked.connect(QCoreApplication.instance().quit)
 
-        
+
+    # '도움말' 버튼을 누르면 작동
+    def help(self) :
+        print('help')
+        WindowhelpClass(self)
         
     # '초기화' 버튼을 누르면 작동
     def init(self) :
@@ -134,6 +163,6 @@ class WindowClass(QMainWindow, form_class) :
 
 if __name__ == "__main__" :
     app = QApplication(sys.argv)
-    myWindow = WindowClass() 
+    myWindow = WindowClass()
     myWindow.show()
     app.exec_()
