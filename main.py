@@ -17,10 +17,14 @@ class WindowClass(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
-
+        self.setWindowIcon(QIcon('icon.png'))
+        self.setWindowTitle('얼굴인식 프로그램')
+        
         #버튼에 기능을 연결하는 코드
         self.search_btn.clicked.connect(self.search)
         self.init_btn.clicked.connect(self.init)
+
+        
         
     # '초기화' 버튼을 누르면 작동
     def init(self) :
