@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>140</y>
+     <y>150</y>
      <width>317</width>
      <height>341</height>
     </rect>
@@ -243,7 +243,7 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>500</y>
+     <y>510</y>
      <width>321</width>
      <height>281</height>
     </rect>
@@ -457,7 +457,7 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>50</y>
+     <y>60</y>
      <width>321</width>
      <height>80</height>
     </rect>
@@ -493,25 +493,37 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
+  <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>10</y>
+     <y>4</y>
      <width>321</width>
-     <height>31</height>
+     <height>54</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="file_name_edit"/>
+    </item>
+    <item row="0" column="0">
      <widget class="QPushButton" name="insert_image_btn">
       <property name="text">
        <string>사진 찾기</string>
       </property>
      </widget>
     </item>
-    <item>
-     <widget class="QLineEdit" name="file_name_edit"/>
+    <item row="1" column="0" colspan="2">
+     <widget class="QLabel" name="sign_lable">
+      <property name="font">
+       <font>
+        <family>NanumGothic</family>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

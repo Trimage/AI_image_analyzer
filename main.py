@@ -79,10 +79,18 @@ class WindowClass(QMainWindow, main_form_class) :
         self.celebrity_accuracy3_value.setText("")
 
         self.photoView.setText(" ")
+        self.sign_lable.setText("")
 
     # '얼굴조사하기' 버튼을 누르면 작동
 
     def search(self) :
+        if self.file_name_edit.text() == "" :
+            self.sign_lable.setText("※파일을 등록해주세요")
+            self.sign_lable.setStyleSheet("Color : red")
+            return 
+        
+        self.sign_lable.setText("")
+
         face_ai_api.insert_file(self.file_name_edit.text())
         celebrity_ai_api.insert_file(self.file_name_edit.text())
         
