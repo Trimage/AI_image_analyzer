@@ -101,6 +101,13 @@ class WindowClass(QMainWindow, main_form_class) :
         qPixmapVar.load(self.file_name_edit.text())
         qPixmapVar = qPixmapVar.scaled(400,500)
 
+
+        if len(face_data['faces']) == 0 :
+            self.photoView.setPixmap(qPixmapVar)
+            self.sign_lable.setText("※발견 된 얼굴이 없습니다.")
+            self.sign_lable.setStyleSheet("Color : red")
+            return
+
         x, y, w, h = face_data['faces'][0]['roi'].values()
         width, height = face_data['info']['size'].values()
         width_ratio = width / 400
