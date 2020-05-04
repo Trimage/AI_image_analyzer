@@ -52,8 +52,9 @@ class WindowClass(QMainWindow, main_form_class) :
     # '사진 찾기' 버튼을 누르면 작동
     def search_image(self):
         fname = QFileDialog.getOpenFileName(self)
-        self.file_name_edit.setText(fname[0])
-        self.sign_lable.setText("")
+        if fname[0] != "" : 
+            self.file_name_edit.setText(fname[0])
+            self.sign_lable.setText("")
 
     # '도움말' 버튼을 누르면 작동
     def help(self) :
