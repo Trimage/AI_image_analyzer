@@ -7,11 +7,9 @@ from PyQt5.QtCore import Qt, QCoreApplication
 import celebrity_ai_api
 import face_ai_api
 
-
 #UI파일 연결
 #단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
 main_form_class = uic.loadUiType("main_ui.ui")[0]
-
 
 class WindowhelpClass(QDialog) :
     def __init__(self, WindowClass) :
@@ -46,9 +44,15 @@ class WindowClass(QMainWindow, main_form_class) :
         #버튼에 기능을 연결하는 코드
         self.search_btn.clicked.connect(self.search)
         self.init_btn.clicked.connect(self.init)
+        self.insert_image_btn.clicked.connect(self.search_image)
         self.help_btn.clicked.connect(self.help)
         self.exit_btn.clicked.connect(QCoreApplication.instance().quit)
 
+        
+    # '사진 찾기' 버튼을 누르면 작동
+    def search_image(self):
+        fname = QFileDialog.getOpenFileName(self)
+        self.file_name_edit.setText(fname[0])
 
     # '도움말' 버튼을 누르면 작동
     def help(self) :
@@ -79,11 +83,14 @@ class WindowClass(QMainWindow, main_form_class) :
     # '얼굴조사하기' 버튼을 누르면 작동
 
     def search(self) :
+        face_ai_api.insert_file(self.file_name_edit.text())
+        celebrity_ai_api.insert_file(self.file_name_edit.text())
+        
         face_data = face_ai_api.request_data()
         celebrity_data = celebrity_ai_api.request_data()
         
         qPixmapVar = QPixmap()
-        qPixmapVar.load('슴성_거니.png')
+        qPixmapVar.load(self.file_name_edit.text())
         qPixmapVar = qPixmapVar.scaled(400,500)
 
         x, y, w, h = face_data['faces'][0]['roi'].values()

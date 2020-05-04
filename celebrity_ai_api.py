@@ -6,8 +6,12 @@ import json
 client_id = "cChJtyEvQH5aVcxJ2GCz"
 client_secret = "eUmgWAYvwO"
 celebrity_url = "https://openapi.naver.com/v1/vision/celebrity" # 유명인 얼굴인식
-files = {'image': open('슴성_거니.png', 'rb')}
+# 원본 files = {'image': open('슴성_거니.png', 'rb')}
+files = {}
 headers = {'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
+
+def insert_file(url) :
+    files['image'] = open(url,'rb')
 
 def request_data() :
     celebrity_response = requests.post(celebrity_url,  files=files, headers=headers)
