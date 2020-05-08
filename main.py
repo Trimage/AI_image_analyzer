@@ -63,6 +63,7 @@ class WindowClass(QMainWindow, main_form_class) :
         
     # '초기화' 버튼을 누르면 작동
     def init(self) :
+
         self.sex_value.setText("")
         self.sex_accuracy_value.setText("")
         self.age_value.setText("")
@@ -90,8 +91,6 @@ class WindowClass(QMainWindow, main_form_class) :
             self.sign_lable.setText("※파일을 등록해주세요")
             self.sign_lable.setStyleSheet("Color : red")
             return 
-        
-        self.sign_lable.setText("")
 
         face_ai_api.insert_file(self.file_name_edit.text())
         celebrity_ai_api.insert_file(self.file_name_edit.text())
@@ -132,6 +131,8 @@ class WindowClass(QMainWindow, main_form_class) :
         # 기존idx 가좌1 / A = 변좌1
         # 기존idx 세좌1 / A = 세좌1
 
+        self.init()
+
         self.photoView.setPixmap(qPixmapVar)
         self.photoView.show()
         
@@ -165,7 +166,7 @@ class WindowClass(QMainWindow, main_form_class) :
         
         self.celebrity_num_value.setText( str(len(celebrity_data['faces'])))
 
-        
+
         if len(celebrity_data['faces']) == 1 :
             self.celebrity_name1_value.setText(celebrity_data['faces'][0]['celebrity']['value'])
             self.celebrity_accuracy1_value.setText( str( celebrity_data['faces'][0]['celebrity']['confidence'] * 100) + ' %')
