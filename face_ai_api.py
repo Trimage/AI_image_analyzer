@@ -21,5 +21,5 @@ def request_data() :
         face_data = json.loads(face_response.text)
         return face_data
     else:
-        print("Error Code:" + face_rescode)
-        return celebrity_rescode
+        print("Error Code:" + str(face_rescode))
+        return face_rescode

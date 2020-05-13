@@ -21,5 +21,5 @@ def request_data() :
         celebrity_data = json.loads(celebrity_response.text)
         return celebrity_data
     else:
-        print("Error Code:" + celebrity_rescode)
+        print("Error Code:" + str(celebrity_rescode))
         return celebrity_rescode

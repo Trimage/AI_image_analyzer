@@ -92,11 +92,26 @@ class WindowClass(QMainWindow, main_form_class) :
             self.sign_lable.setStyleSheet("Color : red")
             return 
 
+        self.init()
+
         face_ai_api.insert_file(self.file_name_edit.text())
         celebrity_ai_api.insert_file(self.file_name_edit.text())
         
         face_data = face_ai_api.request_data()
         celebrity_data = celebrity_ai_api.request_data()
+
+        error_msg = { 400 : "파일 오류입니다. 도움말을 확인해주세요.", 500 : "서버 오류입니다. 잠시 후 시도해주세요." }
+
+        if face_data == 400 or face_data == 500 :
+            self.sign_lable.setText(error_msg[face_data])
+            self.sign_lable.setStyleSheet("Color : red")
+            return
+
+        if celebrity_data == 400 or celebrity_data == 500 :
+            self.sign_lable.setText(error_msg[celebrity_data])
+            self.sign_lable.setStyleSheet("Color : red")
+            return 
+
         
         qPixmapVar = QPixmap()
         qPixmapVar.load(self.file_name_edit.text())
