@@ -16,6 +16,29 @@ db = pymysql.connect(
 
 cursor = db.cursor()
 
+
+# '데이터 불러오기' 버튼에 맞게 수행하는 SQL
+def person_load(date,id,num) :
+    sql = "SELECT * FROM PERSON WHERE 날짜='" + date + "' AND ID = '" + id + "' AND 순번 = " + num
+    
+    cnt = cursor.execute(sql)
+    
+    if cnt == 0 :
+        return False
+    
+    return cursor.fetchone()
+
+def celeb_load(date,id,num) :
+    sql = "SELECT * FROM CELEB WHERE 날짜='" + date + "' AND ID = '" + id + "' AND 순번 = " + num
+    
+    cnt = cursor.execute(sql)
+    
+    if cnt == 0 :
+        return False
+    
+    return cursor.fetchone()    
+
+
 # '데이터 저장하기' 버튼에 맞게 수행하는 SQL
 def info_insert(date,id) :
     
