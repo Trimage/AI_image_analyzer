@@ -11,10 +11,11 @@ db = pymysql.connect(
     user=username,  # DATABASE_USERNAME
     passwd=password,  # DATABASE_PASSWORD
     db=database_name,  # DATABASE_NAME
-    charset='utf8'
+    charset= 'utf8mb4'
 )
 
 cursor = db.cursor()
+
 
 
 # '데이터 불러오기' 버튼에 맞게 수행하는 SQL
@@ -53,6 +54,7 @@ def info_insert(date,id) :
     sql = "INSERT INTO INFO(날짜, ID, 순번) VALUES ('" + date + "', '" + id + "', " + str(num) + ")"
     cursor.execute(sql)
     
+    print(sql)
     print("info_insert_success")
 
     return str(num)
@@ -76,11 +78,12 @@ def celeb_insert(date,id,num,celeb_data) :
 
     if celeb_data['celeb_total'] == 2 :
         sql = "UPDATE CELEB SET 닮은연예인2 = '" + celeb_data['celeb_name2'] + "', 닮은연예인2_정확도 = " + celeb_data['celeb_accuracy2'] + " WHERE 날짜 = '" + date + "' AND ID = '" + id + "' AND 순번=" + num + ")"
+        cursor.execute(sql)
     elif celeb_data['celeb_total'] == 3 :
         sql = "UPDATE CELEB SET 닮은연예인2 = '" + celeb_data['celeb_name2'] + "', 닮은연예인2_정확도 = " + celeb_data['celeb_accuracy2'] + ", 닮은연예인3 = '" + celeb_data['celeb_name3'] + "', 닮은연예인3_정확도 = " + celeb_data['celeb_accuracy3'] + " WHERE 날짜 = '" + date + "' AND ID = '" + id + "' AND 순번=" + num + ")"
+        cursor.execute(sql)
 
     print(sql)
-    cursor.execute(sql)
     
     print("celeb_insert_success")
 

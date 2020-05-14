@@ -71,7 +71,7 @@ class WindowloadClass(QDialog) :
         uic.loadUi(load_ui,self)
         self.show()
         self.setWindowIcon(QIcon('icon.png'))
-        self.setWindowTitle('데이터 저장하기')
+        self.setWindowTitle('데이터 불러오기')
 
         self.confirm_btn.clicked.connect(self.push_confirm)
         self.cancle_btn.clicked.connect(self.push_exit)
@@ -139,6 +139,8 @@ class WindowClass(QMainWindow, main_form_class) :
         if person_data == False or celeb_data == False :
             self.sign_lable.setText("등록되지 않은 데이터 값입니다.")
             self.sign_lable.setStyleSheet("Color : Red")
+
+            self.data_info_lable.setText("")
             return
 
         print(person_data)
@@ -172,8 +174,8 @@ class WindowClass(QMainWindow, main_form_class) :
         else :
             self.celebrity_accuracy3_value.setText("")
         
-        
 
+        self.data_info_lable.setText("불러오기가 완료되었습니다.")
 
 
     # '데이터 저장하기' 버튼을 누르면 작동
@@ -265,6 +267,10 @@ class WindowClass(QMainWindow, main_form_class) :
         face_data = face_ai_api.request_data()
         celebrity_data = celebrity_ai_api.request_data()
 
+        print(face_data)
+        print("\n\n")
+        print(celebrity_data)
+
         error_msg = { 400 : "파일 오류입니다. 도움말을 확인해주세요.", 500 : "서버 오류입니다. 잠시 후 시도해주세요." }
 
         if face_data == 400 or face_data == 500 :
@@ -284,15 +290,9 @@ class WindowClass(QMainWindow, main_form_class) :
         qPixmapVar = qPixmapVar.scaled(400,500)
 
 
-        if len(face_data['faces']) == 0 :
+        if face_data['info']['faceCount'] == 0 :
             self.photoView.setPixmap(qPixmapVar)
             self.sign_lable.setText("※발견 된 얼굴이 없습니다.")
-            self.sign_lable.setStyleSheet("Color : red")
-            return
-
-        elif len(face_data['faces']) >=2 :
-            self.photoView.setPixmap(qPixmapVar)
-            self.sign_lable.setText("※인물이 2명 이상입니다.\n단일인물 사진을 업로드해주세요.")
             self.sign_lable.setStyleSheet("Color : red")
             return
 
