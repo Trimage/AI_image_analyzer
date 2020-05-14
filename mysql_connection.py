@@ -25,10 +25,10 @@ def info_insert(date,id) :
     cnt = cursor.execute(sql)
     
     if cnt != 0 :
-        num = cursor.fetchone()[0]
+        num = cursor.fetchone()[0] + 1
 
     sql = "INSERT INTO INFO(날짜, ID, 순번) VALUES ('" + date + "', '" + id + "', " + str(num) + ")"
-    cnt = cursor.execute(sql)
+    cursor.execute(sql)
     
     print("info_insert_success")
 
