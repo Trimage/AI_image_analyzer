@@ -1,4 +1,5 @@
 import pymysql
+from datetime import datetime
 
 host_name = "ai-image-data-db.cm0jhdnc3y0u.ap-northeast-2.rds.amazonaws.com"
 username = "seok_master"
@@ -16,10 +17,19 @@ db = pymysql.connect(
 
 cursor = db.cursor()
 
-sql = "SELECT @@VERSION"
+# '데이터 저장하기' 버튼에 맞게 수행하는 SQL
+def insert(id) :
+    
+    date = datetime.today().strftime("%Y-%m-%d")
+    num = 1;
+    sql = "SELECT 순번 FROM INFO WHERE 날짜='" + date + "' AND ID='" + id + "' ORDER BY 순번 DESC"
+    
+    cnt = cursor.execute(sql)
+    
+    if cnt != 0 :
+        num = cursor.fetchone()[0]
 
-cursor.execute(sql)
-rows = cursor.fetchone()
-
-for row in rows:
-    print(row)
+    sql = "INSERT INTO INFO(날짜, ID, 순번) VALUES ('" + date + "', '" + id + "', " + str(num) + ")"
+    cnt = cursor.execute(sql)
+    
+    print("success")

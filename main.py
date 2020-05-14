@@ -34,6 +34,30 @@ class WindowhelpClass(QDialog) :
         self.close()
 
 
+class WindowsaveClass(QDialog) :
+    def __init__(self, WindowClass) :
+        super(WindowsaveClass,self).__init__(WindowClass)
+        save_ui = "save_ui.ui"
+        uic.loadUi(save_ui,self)
+        self.show()
+        self.setWindowIcon(QIcon('icon.png'))
+        self.setWindowTitle('데이터 저장하기')
+
+        self.confirm_btn.clicked.connect(self.push_confirm)
+        self.cancle_btn.clicked.connect(self.push_exit)
+
+    def push_confirm(self) :
+        if self.id_line.text() == "" :
+            self.sign_lable.setText("▲아이디를 입력해주세요")
+            self.sign_lable.setStyleSheet("Color : red")
+        else :
+            id = self.id_line.text()
+            mysql_connection.insert(id)
+
+    def push_exit(self) :
+        self.close()
+
+
 #화면을 띄우는데 사용되는 Class 선언
 class WindowClass(QMainWindow, main_form_class) :
     def __init__(self) :
@@ -47,6 +71,7 @@ class WindowClass(QMainWindow, main_form_class) :
         self.init_btn.clicked.connect(self.init)
         self.insert_image_btn.clicked.connect(self.search_image)
         self.help_btn.clicked.connect(self.help)
+        self.data_save_btn.clicked.connect(self.save_data)
         self.exit_btn.clicked.connect(QCoreApplication.instance().quit)
 
         
@@ -57,9 +82,16 @@ class WindowClass(QMainWindow, main_form_class) :
             self.file_name_edit.setText(fname[0])
             self.sign_lable.setText("")
 
+    # '데이터 저장하기' 버튼을 누르면 작동
+    def save_data(self) :
+        if self.sex_value.text() != "" :
+            WindowsaveClass(self)
+        else :
+            self.sign_lable.setText("얼굴조사하기를 먼저 실행해주세요.")
+            self.sign_lable.setStyleSheet("Color : Red")
+        
     # '도움말' 버튼을 누르면 작동
     def help(self) :
-        print('help')
         WindowhelpClass(self)
         
     # '초기화' 버튼을 누르면 작동
@@ -85,8 +117,8 @@ class WindowClass(QMainWindow, main_form_class) :
         self.photoView.setText(" ")
         self.sign_lable.setText("")
 
-    # '얼굴조사하기' 버튼을 누르면 작동
 
+    # '얼굴조사하기' 버튼을 누르면 작동
     def search(self) :
         if self.file_name_edit.text() == "" :
             self.sign_lable.setText("※파일을 등록해주세요")

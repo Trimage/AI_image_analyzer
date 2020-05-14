@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>845</height>
+    <height>866</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>175</y>
+     <y>200</y>
      <width>317</width>
      <height>341</height>
     </rect>
@@ -243,7 +243,7 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>535</y>
+     <y>560</y>
      <width>321</width>
      <height>281</height>
     </rect>
@@ -459,7 +459,7 @@
      <x>460</x>
      <y>85</y>
      <width>321</width>
-     <height>80</height>
+     <height>100</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
@@ -470,6 +470,13 @@
       </property>
      </widget>
     </item>
+    <item row="2" column="1">
+     <widget class="QPushButton" name="exit_btn">
+      <property name="text">
+       <string>종료</string>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0">
      <widget class="QPushButton" name="search_btn">
       <property name="text">
@@ -477,17 +484,24 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <widget class="QPushButton" name="help_btn">
       <property name="text">
        <string>도움말</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QPushButton" name="exit_btn">
+    <item row="1" column="0">
+     <widget class="QPushButton" name="data_save_btn">
       <property name="text">
-       <string>종료</string>
+       <string>데이터 저장하기</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="data_load_btn">
+      <property name="text">
+       <string>데이터 불러오기</string>
       </property>
      </widget>
     </item>
