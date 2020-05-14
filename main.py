@@ -113,7 +113,8 @@ class WindowClass(QMainWindow, main_form_class) :
             self.sign_lable.setStyleSheet("Color : red")
             return 
 
-        
+        self.init()
+
         qPixmapVar = QPixmap()
         qPixmapVar.load(self.file_name_edit.text())
         qPixmapVar = qPixmapVar.scaled(400,500)
@@ -122,6 +123,12 @@ class WindowClass(QMainWindow, main_form_class) :
         if len(face_data['faces']) == 0 :
             self.photoView.setPixmap(qPixmapVar)
             self.sign_lable.setText("※발견 된 얼굴이 없습니다.")
+            self.sign_lable.setStyleSheet("Color : red")
+            return
+
+        elif len(face_data['faces']) >=2 :
+            self.photoView.setPixmap(qPixmapVar)
+            self.sign_lable.setText("※인물이 2명 이상입니다.\n단일인물 사진을 업로드해주세요.")
             self.sign_lable.setStyleSheet("Color : red")
             return
 
@@ -147,7 +154,6 @@ class WindowClass(QMainWindow, main_form_class) :
         # 기존idx 가좌1 / A = 변좌1
         # 기존idx 세좌1 / A = 세좌1
 
-        self.init()
 
         self.photoView.setPixmap(qPixmapVar)
         self.photoView.show()

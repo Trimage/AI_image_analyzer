@@ -15,6 +15,7 @@ db = pymysql.connect(
 )
 
 cursor = db.cursor()
+
 sql = "SELECT @@VERSION"
 
 cursor.execute(sql)
