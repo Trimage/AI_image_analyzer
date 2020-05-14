@@ -48,6 +48,8 @@ class WindowsaveClass(QDialog) :
         self.confirm_btn.clicked.connect(self.push_confirm)
         self.cancle_btn.clicked.connect(self.push_exit)
 
+        self.check = False
+
     def push_confirm(self) :
         if self.id_line.text() == "" :
             self.sign_lable.setText("▲아이디를 입력해주세요")
@@ -58,7 +60,6 @@ class WindowsaveClass(QDialog) :
             self.close()
 
     def push_exit(self) :
-        self.check = False
         self.close()
 
 
@@ -75,6 +76,8 @@ class WindowloadClass(QDialog) :
         self.confirm_btn.clicked.connect(self.push_confirm)
         self.cancle_btn.clicked.connect(self.push_exit)
 
+        self.check = False
+
     def push_confirm(self) :
         if self.date_line.text() == "" or self.id_line.text() == "" or self.num_line.text() == "" :
             self.sign_lable.setText("▲모든 칸을 입력해주세요.")
@@ -84,11 +87,9 @@ class WindowloadClass(QDialog) :
             self.id = self.id_line.text()
             self.num = self.num_line.text()
             self.check = True
-
             self.close()
 
     def push_exit(self) :
-        self.check = False
         self.close()
 
 
@@ -125,7 +126,7 @@ class WindowClass(QMainWindow, main_form_class) :
         load_dlg = WindowloadClass(self)
         load_dlg.exec_()
 
-        if load_dlg.check == False :
+        if load_dlg.check is not True :
             return
 
         date = load_dlg.date
@@ -142,13 +143,13 @@ class WindowClass(QMainWindow, main_form_class) :
 
         print(person_data)
         self.sex_value.setText(person_data[3])
-        self.sex_accuracy_value.setText(str(person_data[4]) + "%")
+        self.sex_accuracy_value.setText(str(person_data[4]) + " %")
         self.age_value.setText(person_data[5])
-        self.age_accuracy_value.setText(str(person_data[6]) + "%")
+        self.age_accuracy_value.setText(str(person_data[6]) + " %")
         self.emotion_value.setText(person_data[7])
-        self.emotion_accuracy_value.setText(str(person_data[8]) + "%")
+        self.emotion_accuracy_value.setText(str(person_data[8]) + " %")
         self.pose_value.setText(person_data[9])
-        self.pose_accuracy_value.setText(str(person_data[10]) + "%")
+        self.pose_accuracy_value.setText(str(person_data[10]) + " %")
 
 
 
@@ -157,17 +158,17 @@ class WindowClass(QMainWindow, main_form_class) :
         self.celebrity_num_value.setText(str(celeb_data[3]))
         
         self.celebrity_name1_value.setText(celeb_data[4])
-        self.celebrity_accuracy1_value.setText(str(celeb_data[5]))
+        self.celebrity_accuracy1_value.setText(str(celeb_data[5]) + " %")
         
         self.celebrity_name2_value.setText(celeb_data[6])
         if celeb_data[7] != None :
-            self.celebrity_accuracy2_value.setText(str(celeb_data[7]))
+            self.celebrity_accuracy2_value.setText(str(celeb_data[7]) + " %")
         else :
             self.celebrity_accuracy2_value.setText("")
 
         self.celebrity_name3_value.setText(celeb_data[8])
         if celeb_data[9] != None :
-            self.celebrity_accuracy3_value.setText(str(celeb_data[9]))
+            self.celebrity_accuracy3_value.setText(str(celeb_data[9]) + " %")
         else :
             self.celebrity_accuracy3_value.setText("")
         
@@ -185,8 +186,8 @@ class WindowClass(QMainWindow, main_form_class) :
             save_dlg = WindowsaveClass(self)
             save_dlg.exec_()
 
-            if load_dlg.check == False :
-                retrun
+            if save_dlg.check is not True :
+                return
 
             id = save_dlg.id
 
@@ -246,6 +247,7 @@ class WindowClass(QMainWindow, main_form_class) :
 
         self.photoView.setText(" ")
         self.sign_lable.setText("")
+        self.data_info_lable.setText("")
 
 
     # '얼굴조사하기' 버튼을 누르면 작동
