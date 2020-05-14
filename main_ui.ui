@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>200</y>
+     <y>225</y>
      <width>317</width>
      <height>341</height>
     </rect>
@@ -243,7 +243,7 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>560</y>
+     <y>585</y>
      <width>321</width>
      <height>281</height>
     </rect>
@@ -457,7 +457,7 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>85</y>
+     <y>110</y>
      <width>321</width>
      <height>100</height>
     </rect>
@@ -513,10 +513,22 @@
      <x>460</x>
      <y>4</y>
      <width>321</width>
-     <height>71</height>
+     <height>91</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0" colspan="2">
+     <widget class="QLabel" name="sign_lable">
+      <property name="font">
+       <font>
+        <family>NanumGothic</family>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="1">
      <widget class="QLineEdit" name="file_name_edit"/>
     </item>
@@ -527,13 +539,8 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QLabel" name="sign_lable">
-      <property name="font">
-       <font>
-        <family>NanumGothic</family>
-       </font>
-      </property>
+    <item row="2" column="0" colspan="2">
+     <widget class="QLabel" name="data_info_lable">
       <property name="text">
        <string/>
       </property>
