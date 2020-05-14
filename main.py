@@ -4,6 +4,8 @@ from PyQt5.QtGui import *
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, QCoreApplication
 
+from datetime import datetime
+
 import celebrity_ai_api
 import face_ai_api
 import mysql_connection
@@ -51,8 +53,8 @@ class WindowsaveClass(QDialog) :
             self.sign_lable.setText("▲아이디를 입력해주세요")
             self.sign_lable.setStyleSheet("Color : red")
         else :
-            id = self.id_line.text()
-            mysql_connection.insert(id)
+            self.id = self.id_line.text()
+            self.close()
 
     def push_exit(self) :
         self.close()
@@ -84,11 +86,46 @@ class WindowClass(QMainWindow, main_form_class) :
 
     # '데이터 저장하기' 버튼을 누르면 작동
     def save_data(self) :
-        if self.sex_value.text() != "" :
-            WindowsaveClass(self)
-        else :
+        if self.sex_value.text() == "" :
             self.sign_lable.setText("얼굴조사하기를 먼저 실행해주세요.")
             self.sign_lable.setStyleSheet("Color : Red")
+            
+        else :
+            save_dlg = WindowsaveClass(self)
+            save_dlg.exec_()
+
+            id = save_dlg.id
+            print(id)
+
+            date = datetime.today().strftime("%Y-%m-%d")
+
+            person_data = {'sex_value' : self.sex_value.text(),
+                           'sex_accuracy' : self.sex_accuracy_value.text()[:-2],
+                           'age_value' : self.age_value.text(),
+                           'age_accuracy' : self.age_accuracy_value.text()[:-2],
+                           'emotion_value' : self.emotion_value.text(),
+                           'emotion_accuracy' : self.emotion_accuracy_value.text()[:-2],
+                           'pose_value' : self.pose_value.text(),
+                           'pose_accuracy' : self.pose_accuracy_value.text()[:-2]
+                           }
+
+            celeb_data = {'celeb_total' : self.celebrity_num_value.text(),
+                           'celeb_name1' : self.celebrity_name1_value.text(),
+                           'celeb_accuracy1' : self.celebrity_accuracy1_value.text()[:-2],
+                           'celeb_name2' : self.celebrity_name2_value.text(),
+                           'celeb_accuracy2' : self.celebrity_accuracy1_value.text()[:-2],
+                           'celeb_name3' : self.celebrity_name3_value.text(),
+                           'celeb_accuracy3' : self.celebrity_accuracy3_value.text()[:-2]
+                           }
+
+            num = mysql_connection.info_insert(date,id)
+
+            mysql_connection.person_insert(date,id,num,person_data)
+
+            mysql_connection.celeb_insert(date,id,num,celeb_data)
+
+            self.data_info_lable.setText("저장이 완료되었습니다\n저장 값 : {0} {1} {2}".format(date,id,num))
+
         
     # '도움말' 버튼을 누르면 작동
     def help(self) :
