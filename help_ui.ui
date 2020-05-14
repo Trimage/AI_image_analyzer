@@ -16,8 +16,8 @@
   <widget class="QLabel" name="icon_lable">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
+     <x>30</x>
+     <y>23</y>
      <width>100</width>
      <height>100</height>
     </rect>
@@ -43,12 +43,12 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>170</y>
+     <y>160</y>
      <width>470</width>
-     <height>161</height>
+     <height>201</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,2,2">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,2,2,2">
     <item>
      <widget class="QLabel" name="help_lable1">
       <property name="font">
@@ -73,7 +73,7 @@
        </font>
       </property>
       <property name="text">
-       <string>1) 이미지의 크기는 최대 2MB입니다.</string>
+       <string>1) 단일인물 사진만 가능합니다.</string>
       </property>
      </widget>
     </item>
@@ -87,8 +87,7 @@
        </font>
       </property>
       <property name="text">
-       <string>2) 모든 이미지 포맷 가능
-*.GIF에 경우 첫 번째 프레임의 이미지가 기준이 됩니다.</string>
+       <string>2) 이미지의 크기는 최대 2MB입니다.</string>
       </property>
      </widget>
     </item>
@@ -102,7 +101,22 @@
        </font>
       </property>
       <property name="text">
-       <string>3) 너비 및 높이는 50px 이상, 너비는 높이의 4배 이상이어야합니다.</string>
+       <string>3) 모든 이미지 포맷 가능
+*.GIF에 경우 첫 번째 프레임의 이미지가 기준이 됩니다.</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="help_lable5">
+      <property name="font">
+       <font>
+        <family>나눔고딕 ExtraBold</family>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>4) 너비 및 높이는 50px 이상, 너비는 높이의 4배 이상이어야합니다.</string>
       </property>
      </widget>
     </item>

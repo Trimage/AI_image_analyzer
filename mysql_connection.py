@@ -72,7 +72,6 @@ def celeb_insert(date,id,num,celeb_data) :
 
     sql = "INSERT INTO CELEB(날짜,ID,순번,닮은연예인수, 닮은연예인1,닮은연예인1_정확도) VALUES ('" + date + "', '" + id + "', " + str(num) + ", " + celeb_data['celeb_total'] + ", '" + celeb_data['celeb_name1'] + "', " + celeb_data['celeb_accuracy1'] + ")"
     
-    print(sql)
     cursor.execute(sql)
 
     if celeb_data['celeb_total'] == 2 :
