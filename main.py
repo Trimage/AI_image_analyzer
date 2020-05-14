@@ -54,9 +54,41 @@ class WindowsaveClass(QDialog) :
             self.sign_lable.setStyleSheet("Color : red")
         else :
             self.id = self.id_line.text()
+            self.check = True
             self.close()
 
     def push_exit(self) :
+        self.check = False
+        self.close()
+
+
+
+class WindowloadClass(QDialog) :
+    def __init__(self, WindowClass) :
+        super(WindowloadClass,self).__init__(WindowClass)
+        load_ui = "load_ui.ui"
+        uic.loadUi(load_ui,self)
+        self.show()
+        self.setWindowIcon(QIcon('icon.png'))
+        self.setWindowTitle('데이터 저장하기')
+
+        self.confirm_btn.clicked.connect(self.push_confirm)
+        self.cancle_btn.clicked.connect(self.push_exit)
+
+    def push_confirm(self) :
+        if self.date_line.text() == "" or self.id_line.text() == "" or self.num_line.text() == "" :
+            self.sign_lable.setText("▲모든 칸을 입력해주세요.")
+            self.sign_lable.setStyleSheet("Color : red")
+        else :
+            self.date = self.date_line.text()
+            self.id = self.id_line.text()
+            self.num = self.num_line.text()
+            self.check = True
+
+            self.close()
+
+    def push_exit(self) :
+        self.check = False
         self.close()
 
 
@@ -74,6 +106,7 @@ class WindowClass(QMainWindow, main_form_class) :
         self.insert_image_btn.clicked.connect(self.search_image)
         self.help_btn.clicked.connect(self.help)
         self.data_save_btn.clicked.connect(self.save_data)
+        self.data_load_btn.clicked.connect(self.load_data)
         self.exit_btn.clicked.connect(QCoreApplication.instance().quit)
 
         
@@ -83,6 +116,64 @@ class WindowClass(QMainWindow, main_form_class) :
         if fname[0] != "" : 
             self.file_name_edit.setText(fname[0])
             self.sign_lable.setText("")
+
+
+
+
+    # '데이터 불러오기' 버튼을 누르면 작동
+    def load_data(self) :
+        load_dlg = WindowloadClass(self)
+        load_dlg.exec_()
+
+        if load_dlg.check == False :
+            return
+
+        date = load_dlg.date
+        id = load_dlg.id
+        num =load_dlg.num
+
+        person_data = mysql_connection.person_load(date,id,num)
+        celeb_data = mysql_connection.celeb_load(date,id,num)
+
+        if person_data == False or celeb_data == False :
+            self.sign_lable.setText("등록되지 않은 데이터 값입니다.")
+            self.sign_lable.setStyleSheet("Color : Red")
+            return
+
+        print(person_data)
+        self.sex_value.setText(person_data[3])
+        self.sex_accuracy_value.setText(str(person_data[4]) + "%")
+        self.age_value.setText(person_data[5])
+        self.age_accuracy_value.setText(str(person_data[6]) + "%")
+        self.emotion_value.setText(person_data[7])
+        self.emotion_accuracy_value.setText(str(person_data[8]) + "%")
+        self.pose_value.setText(person_data[9])
+        self.pose_accuracy_value.setText(str(person_data[10]) + "%")
+
+
+
+
+        print(celeb_data)
+        self.celebrity_num_value.setText(str(celeb_data[3]))
+        
+        self.celebrity_name1_value.setText(celeb_data[4])
+        self.celebrity_accuracy1_value.setText(str(celeb_data[5]))
+        
+        self.celebrity_name2_value.setText(celeb_data[6])
+        if celeb_data[7] != None :
+            self.celebrity_accuracy2_value.setText(str(celeb_data[7]))
+        else :
+            self.celebrity_accuracy2_value.setText("")
+
+        self.celebrity_name3_value.setText(celeb_data[8])
+        if celeb_data[9] != None :
+            self.celebrity_accuracy3_value.setText(str(celeb_data[9]))
+        else :
+            self.celebrity_accuracy3_value.setText("")
+        
+        
+
+
 
     # '데이터 저장하기' 버튼을 누르면 작동
     def save_data(self) :
@@ -94,8 +185,10 @@ class WindowClass(QMainWindow, main_form_class) :
             save_dlg = WindowsaveClass(self)
             save_dlg.exec_()
 
+            if load_dlg.check == False :
+                retrun
+
             id = save_dlg.id
-            print(id)
 
             date = datetime.today().strftime("%Y-%m-%d")
 
