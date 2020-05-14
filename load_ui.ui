@@ -92,6 +92,7 @@
  <tabstops>
   <tabstop>date_line</tabstop>
   <tabstop>id_line</tabstop>
+  <tabstop>num_line</tabstop>
   <tabstop>confirm_btn</tabstop>
   <tabstop>cancle_btn</tabstop>
  </tabstops>
