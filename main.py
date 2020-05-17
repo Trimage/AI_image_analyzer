@@ -175,6 +175,15 @@ class WindowClass(QMainWindow, main_form_class) :
             self.celebrity_accuracy3_value.setText("")
         
 
+        binary_image = mysql_connection.info_load(date,id,num)
+        qp = QPixmap()
+        qp.loadFromData(binary_image)
+
+        print(binary_image)
+        
+        self.photoView.setPixmap(qp)
+        self.photoView.show()
+
         self.data_info_lable.setText("불러오기가 완료되었습니다.")
 
 
@@ -214,7 +223,7 @@ class WindowClass(QMainWindow, main_form_class) :
                            'celeb_accuracy3' : self.celebrity_accuracy3_value.text()[:-2]
                            }
 
-            num = mysql_connection.info_insert(date,id)
+            num = mysql_connection.info_insert(date,id,self.file_name_edit.text())
 
             mysql_connection.person_insert(date,id,num,person_data)
 
