@@ -17,8 +17,40 @@ db = pymysql.connect(
 cursor = db.cursor()
 
 
+#파일을 바이너리 값으로 변환
+def convertToBinaryData(filepath):
+    # Convert digital data to binary format
+    with open(filepath, 'rb') as file:
+        binaryData = file.read()
+
+    print(binaryData)
+    return binaryData
+
+#파일 저장?
+def write_file(data, filename):
+    # Convert binary data to proper format and write it on Hard Disk
+    with open(filename, 'wb') as file:
+        file.write(data)
+
 
 # '데이터 불러오기' 버튼에 맞게 수행하는 SQL
+
+def info_load(date,id,num) :
+    sql = "SELECT photo FROM INFO WHERE 날짜='{0}' AND ID = '{1}' AND 순번 = {2}".format(date,id,num)
+
+    cnt = cursor.execute(sql)
+    
+    if cnt == 0 :
+        return False
+
+    data = cursor.fetchone()[0]
+
+    filename = "C:\\Users\\Trimage\\Desktop\\image.png"
+    write_file(data,filename)
+
+    return data
+
+
 def person_load(date,id,num) :
     
     sql = "SELECT * FROM PERSON WHERE 날짜='{0}' AND ID = '{1}' AND 순번 = {2}".format(date,id,num)
@@ -42,7 +74,7 @@ def celeb_load(date,id,num) :
 
 
 # '데이터 저장하기' 버튼에 맞게 수행하는 SQL
-def info_insert(date,id) :
+def info_insert(date,id,filepath) :
 
     num = 1
     sql = "SELECT 순번 FROM INFO WHERE 날짜='{0}' AND ID='{1}' ORDER BY 순번 DESC".format(date,id)
@@ -52,16 +84,18 @@ def info_insert(date,id) :
     if cnt != 0 :
         num = cursor.fetchone()[0] + 1
 
-    sql = "INSERT INTO INFO(날짜, ID, 순번) VALUES ('{0}', '{1}', {2})".format(date,id,num)
+    binary_data = convertToBinaryData(filepath)
 
-    cursor.execute(sql)
+    data_tuple = (date, id, num, binary_data)
+    sql = "INSERT INTO INFO(날짜, ID, 순번, photo) VALUES (%s, %s, %s, %s)"
+
+    cursor.execute(sql,data_tuple)
     
     db.commit()
 
     print(sql)
     print("info_insert_success")
 
-    
     return str(num)
 
 
