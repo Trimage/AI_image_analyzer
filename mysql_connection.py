@@ -8,7 +8,7 @@ database_name = "analysis_DB"
 
 db = pymysql.connect(
     host=host_name,  # DATABASE_HOST
-    port=3306,
+    port=3306,      # DATABASE_PORT
     user=username,  # DATABASE_USERNAME
     passwd=password,  # DATABASE_PASSWORD
     db=database_name,  # DATABASE_NAME
@@ -72,9 +72,9 @@ def info_insert(date,id,image_data) :
     #여기까지 최신 순번을 얻어와서 num변수에 저장
 
 
-    binary_data = convert.convertToBinaryData(image_data[1])
+    binary_data = convert.convertToBinaryData(image_data[6])
 
-    data_tuple = (date, id, num, image_data[0][0], image_data[0][1], image_data[0][2], image_data[0][3], image_data[0][4], image_data[0][5], binary_data)
+    data_tuple = (date, id, num, image_data[0], image_data[1], image_data[2], image_data[3], image_data[4], image_data[5], binary_data)
     sql = "INSERT INTO INFO(날짜, ID, 순번, 위치x, 위치y, 가로width, 세로height, 가로size, 세로size, photo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     cursor.execute(sql,data_tuple)

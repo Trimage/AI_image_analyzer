@@ -1,3 +1,5 @@
+#닮은연예인 정보 API (닮은 연예인 데이터를 json형태로 받아옴
+
 import os
 import sys
 import requests
