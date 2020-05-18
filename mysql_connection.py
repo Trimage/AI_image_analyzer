@@ -29,6 +29,8 @@ def info_load(date,id,num) :
 
     data = cursor.fetchone()
 
+    print("info_load_success")
+
     return data
 
 
@@ -42,6 +44,8 @@ def person_load(date,id,num) :
     if cnt == 0 :
         return False
     
+    print("person_load_success")
+
     return cursor.fetchone()
 
 
@@ -54,6 +58,8 @@ def celeb_load(date,id,num) :
     if cnt == 0 :
         return False
     
+    print("celeb_load_success")
+
     return cursor.fetchone()    
 
 
@@ -81,6 +87,8 @@ def info_insert(date,id,image_data) :
     
     db.commit()
 
+    print("info_insert_success")
+
     return str(num)
 
 
@@ -90,10 +98,10 @@ def person_insert(date,id,num,person_data) :
     sql = "INSERT INTO PERSON VALUES ('{0}', '{1}', {2}, '{3}', {4}, '{5}', {6}, '{7}', {8}, '{9}', {10})".format(date,id,num,person_data['sex_value'],person_data['sex_accuracy'],person_data['age_value'],person_data['age_accuracy'],person_data['emotion_value'],person_data['emotion_accuracy'],person_data['pose_value'],person_data['pose_accuracy'])
     print(sql)
     cursor.execute(sql)
-    
-    print("person_insert_success")
-
+   
     db.commit()
+
+    print("person_insert_success")
 
     return
 
@@ -110,8 +118,6 @@ def celeb_insert(date,id,num,celeb_data) :
     elif celeb_data['celeb_total'] == 3 :
         sql = "UPDATE CELEB SET 닮은연예인2 = '{0}', 닮은연예인2_정확도 = {1}, 닮은연예인3 = '{2}', 닮은연예인3_정확도 = {3} WHERE 날짜 = '{4}' AND ID = '{5}' AND 순번={6})".format(celeb_data['celeb_name2'],celeb_data['celeb_accuracy2'],celeb_data['celeb_name3'],celeb_data['celeb_accuracy3'],date,id,num)
         cursor.execute(sql)
-
-    print(sql)
     
     print("celeb_insert_success")
 

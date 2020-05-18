@@ -15,10 +15,10 @@ import celebrity_ai_api
 import face_ai_api
 import mysql_connection
 
+
 #UI파일 연결
 #단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
 main_form_class = uic.loadUiType("main_ui.ui")[0]
-
 
 
 #화면을 띄우는데 사용되는 Class 선언
@@ -39,8 +39,10 @@ class WindowClass(QMainWindow, main_form_class) :
         self.data_load_btn.clicked.connect(self.load_data)
         self.exit_btn.clicked.connect(QCoreApplication.instance().quit)
 
-        self.photo_info = []
+        self.photo_info = []    #이미지에 얼굴 표시 하는데 사용
+
         
+
     # '사진 찾기' 버튼을 누르면 작동
     def search_image(self):
         fname = QFileDialog.getOpenFileName(self)
@@ -65,6 +67,7 @@ class WindowClass(QMainWindow, main_form_class) :
         person_data = mysql_connection.person_load(date,id,num)
         celeb_data = mysql_connection.celeb_load(date,id,num)
 
+
         if person_data == False or celeb_data == False :
             self.sign_lable.setText("등록되지 않은 데이터 값입니다.")
             self.sign_lable.setStyleSheet("Color : Red")
@@ -72,7 +75,6 @@ class WindowClass(QMainWindow, main_form_class) :
             self.data_info_lable.setText("")
             return
 
-        print(person_data)
         self.sex_value.setText(person_data[3])
         self.sex_accuracy_value.setText(str(person_data[4]) + " %")
         self.age_value.setText(person_data[5])
@@ -82,20 +84,14 @@ class WindowClass(QMainWindow, main_form_class) :
         self.pose_value.setText(person_data[9])
         self.pose_accuracy_value.setText(str(person_data[10]) + " %")
 
-
-
-
-        self.celebrity_num_value.setText(str(celeb_data[3]))
-        
+        self.celebrity_num_value.setText(str(celeb_data[3]))        
         self.celebrity_name1_value.setText(celeb_data[4])
         self.celebrity_accuracy1_value.setText(str(celeb_data[5]) + " %")
-        
         self.celebrity_name2_value.setText(celeb_data[6])
         if celeb_data[7] != None :
             self.celebrity_accuracy2_value.setText(str(celeb_data[7]) + " %")
         else :
             self.celebrity_accuracy2_value.setText("")
-
         self.celebrity_name3_value.setText(celeb_data[8])
         if celeb_data[9] != None :
             self.celebrity_accuracy3_value.setText(str(celeb_data[9]) + " %")
@@ -111,6 +107,7 @@ class WindowClass(QMainWindow, main_form_class) :
         self.photoView.show()
 
         self.data_info_lable.setText("불러오기가 완료되었습니다.")
+
 
 
     # '데이터 저장하기' 버튼을 누르면 작동
@@ -158,10 +155,13 @@ class WindowClass(QMainWindow, main_form_class) :
             self.data_info_lable.setText("저장이 완료되었습니다\n저장 값 : {0} {1} {2}".format(date,id,num))
 
         
+
     # '도움말' 버튼을 누르면 작동
     def help(self) :
         WindowhelpClass(self)
         
+
+
     # '초기화' 버튼을 누르면 작동
     def init(self) :
 
@@ -187,8 +187,10 @@ class WindowClass(QMainWindow, main_form_class) :
         self.data_info_lable.setText("")
 
 
+
     # '얼굴조사하기' 버튼을 누르면 작동
     def search(self) :
+
         if self.file_name_edit.text() == "" :
             self.sign_lable.setText("※파일을 등록해주세요")
             self.sign_lable.setStyleSheet("Color : red")
@@ -201,10 +203,6 @@ class WindowClass(QMainWindow, main_form_class) :
         
         face_data = face_ai_api.request_data()
         celebrity_data = celebrity_ai_api.request_data()
-
-        print(face_data)
-        print("\n\n")
-        print(celebrity_data)
 
         error_msg = { 400 : "파일 오류입니다. 도움말을 확인해주세요.", 500 : "서버 오류입니다. 잠시 후 시도해주세요." }
 
@@ -232,15 +230,12 @@ class WindowClass(QMainWindow, main_form_class) :
 
         self.photo_info.append(self.file_name_edit.text())
 
-        print(self.photo_info)
 
         qp = face_draw(self.photo_info,"path")
 
         self.photoView.setPixmap(qp)
         self.photoView.show()
         
-        print(face_data)
-        print(celebrity_data)
 
         sex = {'male' : '남성', 'female' : '여자'}
         
