@@ -101,6 +101,7 @@ class WindowClass(QMainWindow, main_form_class) :
         self.setWindowIcon(QIcon('icon.png'))
         self.setWindowTitle('얼굴인식 프로그램')
         
+
         #버튼에 기능을 연결하는 코드
         self.search_btn.clicked.connect(self.search)
         self.init_btn.clicked.connect(self.init)
@@ -110,6 +111,7 @@ class WindowClass(QMainWindow, main_form_class) :
         self.data_load_btn.clicked.connect(self.load_data)
         self.exit_btn.clicked.connect(QCoreApplication.instance().quit)
 
+        self.photo_info = []
         
     # '사진 찾기' 버튼을 누르면 작동
     def search_image(self):
@@ -117,7 +119,6 @@ class WindowClass(QMainWindow, main_form_class) :
         if fname[0] != "" : 
             self.file_name_edit.setText(fname[0])
             self.sign_lable.setText("")
-
 
 
 
@@ -175,12 +176,27 @@ class WindowClass(QMainWindow, main_form_class) :
             self.celebrity_accuracy3_value.setText("")
         
 
-        binary_image = mysql_connection.info_load(date,id,num)
+        image_data = mysql_connection.info_load(date,id,num)
         qp = QPixmap()
-        qp.loadFromData(binary_image)
-
-        print(binary_image)
+        qp.loadFromData(image_data[6])
+        qp = qp.scaled(400,500)
         
+        x,y,w,h = image_data[0:4]
+        width, height = image_data[4:6]
+        width_ratio = width / 400
+        height_ratio = height / 500
+
+        x = x / width_ratio
+        y = y / height_ratio
+        w = w / width_ratio
+        h = h / height_ratio
+
+        qPixpaint = QPainter(qp)
+        qPixpaint.begin(self)
+        qPixpaint.setPen(QPen(Qt.red, 3))
+        qPixpaint.drawRect(x,y,w,h)
+        qPixpaint.end()
+
         self.photoView.setPixmap(qp)
         self.photoView.show()
 
@@ -204,6 +220,9 @@ class WindowClass(QMainWindow, main_form_class) :
 
             date = datetime.today().strftime("%Y-%m-%d")
 
+            image_data = (self.photo_info,self.file_name_edit.text()) 
+
+
             person_data = {'sex_value' : self.sex_value.text(),
                            'sex_accuracy' : self.sex_accuracy_value.text()[:-2],
                            'age_value' : self.age_value.text(),
@@ -223,7 +242,7 @@ class WindowClass(QMainWindow, main_form_class) :
                            'celeb_accuracy3' : self.celebrity_accuracy3_value.text()[:-2]
                            }
 
-            num = mysql_connection.info_insert(date,id,self.file_name_edit.text())
+            num = mysql_connection.info_insert(date,id,image_data)
 
             mysql_connection.person_insert(date,id,num,person_data)
 
@@ -305,7 +324,10 @@ class WindowClass(QMainWindow, main_form_class) :
             self.sign_lable.setStyleSheet("Color : red")
             return
 
-        x, y, w, h = face_data['faces'][0]['roi'].values()
+        self.photo_info[0:3] = face_data['faces'][0]['roi'].values()
+        self.photo_info[4:5] = face_data['info']['size'].values()
+
+        x,y,w,h = face_data['faces'][0]['roi'].values()
         width, height = face_data['info']['size'].values()
         width_ratio = width / 400
         height_ratio = height / 500

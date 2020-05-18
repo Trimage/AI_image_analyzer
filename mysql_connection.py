@@ -26,31 +26,22 @@ def convertToBinaryData(filepath):
     print(binaryData)
     return binaryData
 
-#파일 저장?
-def write_file(data, filename):
-    # Convert binary data to proper format and write it on Hard Disk
-    with open(filename, 'wb') as file:
-        file.write(data)
 
-
-# '데이터 불러오기' 버튼에 맞게 수행하는 SQL
-
+# '데이터 불러오기' 버튼 누르면 실행 ==> DB내 INFO테이블 데이터 출력
 def info_load(date,id,num) :
-    sql = "SELECT photo FROM INFO WHERE 날짜='{0}' AND ID = '{1}' AND 순번 = {2}".format(date,id,num)
+    sql = "SELECT 위치x, 위치y, 가로width, 세로height, 가로size, 세로size, photo FROM INFO WHERE 날짜='{0}' AND ID = '{1}' AND 순번 = {2}".format(date,id,num)
 
     cnt = cursor.execute(sql)
     
     if cnt == 0 :
         return False
 
-    data = cursor.fetchone()[0]
-
-    filename = "C:\\Users\\Trimage\\Desktop\\image.png"
-    write_file(data,filename)
+    data = cursor.fetchone()
 
     return data
 
 
+# '데이터 불러오기' 버튼 누르면 실행 ==> DB내 PERSON테이블 데이터 출력
 def person_load(date,id,num) :
     
     sql = "SELECT * FROM PERSON WHERE 날짜='{0}' AND ID = '{1}' AND 순번 = {2}".format(date,id,num)
@@ -62,6 +53,8 @@ def person_load(date,id,num) :
     
     return cursor.fetchone()
 
+
+# '데이터 불러오기' 버튼 누르면 실행 ==> DB내 CELEB테이블 데이터 출력
 def celeb_load(date,id,num) :
     sql = "SELECT * FROM CELEB WHERE 날짜='{0}' AND ID = '{1}' AND 순번 = {2}".format(date,id,num)
     
@@ -73,8 +66,9 @@ def celeb_load(date,id,num) :
     return cursor.fetchone()    
 
 
-# '데이터 저장하기' 버튼에 맞게 수행하는 SQL
-def info_insert(date,id,filepath) :
+
+# '데이터 저장하기' 버튼 누르면 실행 ==> DB내 INFO테이블 내 데이터 저장 (순번은 최신번호를 얻어 저장)
+def info_insert(date,id,image_data) :
 
     num = 1
     sql = "SELECT 순번 FROM INFO WHERE 날짜='{0}' AND ID='{1}' ORDER BY 순번 DESC".format(date,id)
@@ -84,10 +78,10 @@ def info_insert(date,id,filepath) :
     if cnt != 0 :
         num = cursor.fetchone()[0] + 1
 
-    binary_data = convertToBinaryData(filepath)
+    binary_data = convertToBinaryData(image_data[1])
 
-    data_tuple = (date, id, num, binary_data)
-    sql = "INSERT INTO INFO(날짜, ID, 순번, photo) VALUES (%s, %s, %s, %s)"
+    data_tuple = (date, id, num, image_data[0][0], image_data[0][1], image_data[0][2], image_data[0][3], image_data[0][4], image_data[0][5], binary_data)
+    sql = "INSERT INTO INFO(날짜, ID, 순번, 위치x, 위치y, 가로width, 세로height, 가로size, 세로size, photo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     cursor.execute(sql,data_tuple)
     
@@ -99,6 +93,7 @@ def info_insert(date,id,filepath) :
     return str(num)
 
 
+# '데이터 저장하기' 버튼 누르면 실행 ==> DB내 PERSON테이블 내 데이터 저장
 def person_insert(date,id,num,person_data) :
 
     sql = "INSERT INTO PERSON VALUES ('{0}', '{1}', {2}, '{3}', {4}, '{5}', {6}, '{7}', {8}, '{9}', {10})".format(date,id,num,person_data['sex_value'],person_data['sex_accuracy'],person_data['age_value'],person_data['age_accuracy'],person_data['emotion_value'],person_data['emotion_accuracy'],person_data['pose_value'],person_data['pose_accuracy'])
@@ -112,6 +107,7 @@ def person_insert(date,id,num,person_data) :
     return
 
 
+# '데이터 저장하기' 버튼 누르면 실행 ==> DB내 CELEB테이블 내 데이터 저장
 def celeb_insert(date,id,num,celeb_data) :
 
     sql = "INSERT INTO CELEB(날짜,ID,순번,닮은연예인수, 닮은연예인1,닮은연예인1_정확도) VALUES ('{0}', '{1}', {2}, {3}, '{4}', {5})".format(date,id,num,celeb_data['celeb_total'],celeb_data['celeb_name1'],celeb_data['celeb_accuracy1'])
