@@ -6,6 +6,11 @@ from PyQt5.QtCore import Qt, QCoreApplication
 
 from datetime import datetime
 
+from windowclass_help import WindowhelpClass            #도움말 창 관련
+from windowclass_data_save import WindowsaveClass       #데이터 저장하기 창 관련
+from windowclass_data_load import WindowloadClass       #데이터 불러오기 창 관련
+from draw_image import face_draw                        #이미지 출력 관련 (이미지 내 얼굴 표시 및 윈도우에 출력)
+
 import celebrity_ai_api
 import face_ai_api
 import mysql_connection
@@ -14,83 +19,6 @@ import mysql_connection
 #단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
 main_form_class = uic.loadUiType("main_ui.ui")[0]
 
-class WindowhelpClass(QDialog) :
-    def __init__(self, WindowClass) :
-        super(WindowhelpClass,self).__init__(WindowClass)
-        help_ui = "help_ui.ui"
-        uic.loadUi(help_ui,self)
-        self.show()
-        self.setWindowIcon(QIcon('icon.png'))
-        self.setWindowTitle('도움말')
-
-        qPixmapicon = QPixmap()
-        qPixmapicon.load('icon.png')
-        qPixmapicon = qPixmapicon.scaled(100,100)
-        
-        self.icon_lable.setPixmap(qPixmapicon)
-        self.icon_lable.show()
-
-        self.exit_btn.clicked.connect(self.push_exit)
-
-    def push_exit(self) :
-        self.close()
-
-
-class WindowsaveClass(QDialog) :
-    def __init__(self, WindowClass) :
-        super(WindowsaveClass,self).__init__(WindowClass)
-        save_ui = "save_ui.ui"
-        uic.loadUi(save_ui,self)
-        self.show()
-        self.setWindowIcon(QIcon('icon.png'))
-        self.setWindowTitle('데이터 저장하기')
-
-        self.confirm_btn.clicked.connect(self.push_confirm)
-        self.cancle_btn.clicked.connect(self.push_exit)
-
-        self.check = False
-
-    def push_confirm(self) :
-        if self.id_line.text() == "" :
-            self.sign_lable.setText("▲아이디를 입력해주세요")
-            self.sign_lable.setStyleSheet("Color : red")
-        else :
-            self.id = self.id_line.text()
-            self.check = True
-            self.close()
-
-    def push_exit(self) :
-        self.close()
-
-
-
-class WindowloadClass(QDialog) :
-    def __init__(self, WindowClass) :
-        super(WindowloadClass,self).__init__(WindowClass)
-        load_ui = "load_ui.ui"
-        uic.loadUi(load_ui,self)
-        self.show()
-        self.setWindowIcon(QIcon('icon.png'))
-        self.setWindowTitle('데이터 불러오기')
-
-        self.confirm_btn.clicked.connect(self.push_confirm)
-        self.cancle_btn.clicked.connect(self.push_exit)
-
-        self.check = False
-
-    def push_confirm(self) :
-        if self.date_line.text() == "" or self.id_line.text() == "" or self.num_line.text() == "" :
-            self.sign_lable.setText("▲모든 칸을 입력해주세요.")
-            self.sign_lable.setStyleSheet("Color : red")
-        else :
-            self.date = self.date_line.text()
-            self.id = self.id_line.text()
-            self.num = self.num_line.text()
-            self.check = True
-            self.close()
-
-    def push_exit(self) :
-        self.close()
 
 
 #화면을 띄우는데 사용되는 Class 선언
@@ -157,7 +85,6 @@ class WindowClass(QMainWindow, main_form_class) :
 
 
 
-        print(celeb_data)
         self.celebrity_num_value.setText(str(celeb_data[3]))
         
         self.celebrity_name1_value.setText(celeb_data[4])
@@ -177,25 +104,8 @@ class WindowClass(QMainWindow, main_form_class) :
         
 
         image_data = mysql_connection.info_load(date,id,num)
-        qp = QPixmap()
-        qp.loadFromData(image_data[6])
-        qp = qp.scaled(400,500)
         
-        x,y,w,h = image_data[0:4]
-        width, height = image_data[4:6]
-        width_ratio = width / 400
-        height_ratio = height / 500
-
-        x = x / width_ratio
-        y = y / height_ratio
-        w = w / width_ratio
-        h = h / height_ratio
-
-        qPixpaint = QPainter(qp)
-        qPixpaint.begin(self)
-        qPixpaint.setPen(QPen(Qt.red, 3))
-        qPixpaint.drawRect(x,y,w,h)
-        qPixpaint.end()
+        qp = face_draw(image_data,"binary")         #이미지 내 인물의 얼굴을 표시하여 반환
 
         self.photoView.setPixmap(qp)
         self.photoView.show()
@@ -220,9 +130,6 @@ class WindowClass(QMainWindow, main_form_class) :
 
             date = datetime.today().strftime("%Y-%m-%d")
 
-            image_data = (self.photo_info,self.file_name_edit.text()) 
-
-
             person_data = {'sex_value' : self.sex_value.text(),
                            'sex_accuracy' : self.sex_accuracy_value.text()[:-2],
                            'age_value' : self.age_value.text(),
@@ -242,7 +149,7 @@ class WindowClass(QMainWindow, main_form_class) :
                            'celeb_accuracy3' : self.celebrity_accuracy3_value.text()[:-2]
                            }
 
-            num = mysql_connection.info_insert(date,id,image_data)
+            num = mysql_connection.info_insert(date,id,self.photo_info)
 
             mysql_connection.person_insert(date,id,num,person_data)
 
@@ -313,11 +220,6 @@ class WindowClass(QMainWindow, main_form_class) :
 
         self.init()
 
-        qPixmapVar = QPixmap()
-        qPixmapVar.load(self.file_name_edit.text())
-        qPixmapVar = qPixmapVar.scaled(400,500)
-
-
         if face_data['info']['faceCount'] == 0 :
             self.photoView.setPixmap(qPixmapVar)
             self.sign_lable.setText("※발견 된 얼굴이 없습니다.")
@@ -326,31 +228,15 @@ class WindowClass(QMainWindow, main_form_class) :
 
         self.photo_info[0:3] = face_data['faces'][0]['roi'].values()
         self.photo_info[4:5] = face_data['info']['size'].values()
+        self.photo_info = list(map(int,self.photo_info))       #문자열을 숫자로 전환
 
-        x,y,w,h = face_data['faces'][0]['roi'].values()
-        width, height = face_data['info']['size'].values()
-        width_ratio = width / 400
-        height_ratio = height / 500
+        self.photo_info.append(self.file_name_edit.text())
 
-        x = x / width_ratio
-        y = y / height_ratio
-        w = w / width_ratio
-        h = h / height_ratio
+        print(self.photo_info)
 
-        qPixpaint = QPainter(qPixmapVar)
-        qPixpaint.begin(self)
-        qPixpaint.setPen(QPen(Qt.red, 3))
-        qPixpaint.drawRect(x,y,w,h)
-        qPixpaint.end()
+        qp = face_draw(self.photo_info,"path")
 
-        #비율 구하는 법
-        # 기존비율 가로1:세로1  , 변경된 비율 가로2:세로2 인 경우
-        # 가로1 / 가로2 = A , 세로1/A = 세로2가 나옴
-        # 기존idx 가좌1 / A = 변좌1
-        # 기존idx 세좌1 / A = 세좌1
-
-
-        self.photoView.setPixmap(qPixmapVar)
+        self.photoView.setPixmap(qp)
         self.photoView.show()
         
         print(face_data)

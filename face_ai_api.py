@@ -1,3 +1,5 @@
+#얼굴정보 API (연령, 성별, 표정 등의 데이터를 json형태로 받아옴
+
 import os
 import sys
 import requests
