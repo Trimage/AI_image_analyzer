@@ -1,4 +1,5 @@
 import pymysql
+import convert
 
 host_name = "ai-image-data-db.cm0jhdnc3y0u.ap-northeast-2.rds.amazonaws.com"
 username = "seok_master"
@@ -15,16 +16,6 @@ db = pymysql.connect(
 )
 
 cursor = db.cursor()
-
-
-#파일을 바이너리 값으로 변환
-def convertToBinaryData(filepath):
-    # Convert digital data to binary format
-    with open(filepath, 'rb') as file:
-        binaryData = file.read()
-
-    print(binaryData)
-    return binaryData
 
 
 # '데이터 불러오기' 버튼 누르면 실행 ==> DB내 INFO테이블 데이터 출력
@@ -78,7 +69,10 @@ def info_insert(date,id,image_data) :
     if cnt != 0 :
         num = cursor.fetchone()[0] + 1
 
-    binary_data = convertToBinaryData(image_data[1])
+    #여기까지 최신 순번을 얻어와서 num변수에 저장
+
+
+    binary_data = convert.convertToBinaryData(image_data[1])
 
     data_tuple = (date, id, num, image_data[0][0], image_data[0][1], image_data[0][2], image_data[0][3], image_data[0][4], image_data[0][5], binary_data)
     sql = "INSERT INTO INFO(날짜, ID, 순번, 위치x, 위치y, 가로width, 세로height, 가로size, 세로size, photo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -86,9 +80,6 @@ def info_insert(date,id,image_data) :
     cursor.execute(sql,data_tuple)
     
     db.commit()
-
-    print(sql)
-    print("info_insert_success")
 
     return str(num)
 
